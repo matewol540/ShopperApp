@@ -1,0 +1,66 @@
+/* Container takes full screen height */
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Full viewport height */
+  width: 100vw;
+  overflow-x: hidden; /* Enables independent scrolling */
+  gap: 10px;
+  font-family: Consolas, 'Courier New', monospace;
+}
+.home-tittle-span {
+  text-align: center;
+  width: 100%;
+  font-size: x-large;
+}
+/* Each half-screen takes 50% of height */
+.half-screen {
+  flex: 2;
+  display: flex;
+  flex-wrap: wrap;
+  overflow-y: auto; /* Enables independent scrolling */
+  padding: 10px;
+}
+.Item-flex {
+  width: 80%;
+}
+.items-content-flex {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  gap: 3vh;
+  justify-content: center;
+}
+.container-shopping-action {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  padding: 0px 15px 0px 15px;
+}
+.btn-shopping {
+  flex: 1;
+  width: 30vw;
+  box-shadow: 0 0px 5px rgba(255, 255, 255, 0.2);
+}
+
+.save-button {
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+.logout-button {
+  position: fixed;
+  top: 20px;
+  left: 100%;
+  transform: translateX(-150%);
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
