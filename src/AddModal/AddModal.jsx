@@ -4,11 +4,13 @@ import { firestore, storage } from '../firebase'
 import { doc, getDoc, setDoc } from 'firebase/firestore'
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
 import './AddModal.css'
-import GoogleButton from 'react-google-button'
 
 function AddModal({ isOpen, onClose }) {
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
+  const [fileUrl, setFileUrl] = useState(
+    'https://archive.org/download/placeholder-image/placeholder-image.jpg'
+  )
   const [uploading, setUploading] = useState(false)
   const [progress, setProgress] = useState(0)
 
@@ -25,6 +27,8 @@ function AddModal({ isOpen, onClose }) {
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0])
+    setFileUrl(URL.createObjectURL(e.target.files[0]))
+    console.log(file)
   }
 
   const handleUpload = async () => {
@@ -76,16 +80,21 @@ function AddModal({ isOpen, onClose }) {
     try {
       const imageUrl = await handleUpload() // Wait for image upload to complete
       const userDocRef = doc(firestore, 'Shopping', name)
-      const docSnap = await getDoc(userDocRef)
+      const docSnapShopping = await getDoc(userDocRef)
+      const userDocRefFridge = doc(firestore, 'Fridge', name)
+      const docSnapFridge = await getDoc(userDocRefFridge)
 
-      if (!docSnap.exists()) {
+      if (!docSnapShopping.exists() && !docSnapFridge.exists()) {
         const item = { Name: name, Count: 0, Taker: '', imageUrl }
         await setDoc(userDocRef, item)
 
         setName('')
         setFile(null)
+        setFileUrl(
+          'https://archive.org/download/placeholder-image/placeholder-image.jpg'
+        )
       } else {
-        console.log('Item already exists in the database')
+        alert('Item already exists in the database')
       }
     } catch (error) {
       console.error('Error uploading image:', error)
@@ -103,6 +112,7 @@ function AddModal({ isOpen, onClose }) {
           type="text"
           value={name}
           placeholder="Item Name"
+          className="item-name-input"
           onChange={(e) => setName(e.target.value)}
           required
         />
@@ -114,9 +124,21 @@ function AddModal({ isOpen, onClose }) {
           onChange={handleFileChange}
           required
         />
-        <label htmlFor="fileSelector" className="file-label">
-          📸 Take photo
-        </label>
+        <div
+          className="file-selector-container"
+          onClick={() => document.getElementById('fileSelector').click()}
+        >
+          <div className="file-image-wrapper">
+            <img
+              style={{
+                width: '100%',
+                objectFit: 'cover',
+              }}
+              src={fileUrl}
+            ></img>
+          </div>
+          <label className="file-label">📸 Take photo</label>
+        </div>
         {uploading && <span>Uploading {progress}%</span>}
       </div>
       <div className="modal-action-btn">
